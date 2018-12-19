@@ -30,10 +30,7 @@
         android:gravity="center"
         android:onClick="installOuterPlugin"
         android:text="安装外置插件"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        />
 
     <TextView
         android:layout_width="match_parent"
@@ -41,22 +38,16 @@
         android:gravity="center"
         android:onClick="gotoOuterPage"
         android:text="跳转外置插件页面"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+         />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginTop="30dp"
         android:gravity="center"
-        android:onClick="installInnerPlugin"
-        android:text="安装内置插件"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:onClick="getComputor"
+        android:text="获取插件的Computor类"
+       />
 
     <TextView
         android:layout_width="match_parent"
@@ -64,8 +55,21 @@
         android:gravity="center"
         android:onClick="gotoInnerPage"
         android:text="跳转到内置插件页面"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+         />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:onClick="testAIDL"
+        android:text="通过AIDL通信，调用插件函数"
+       />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:onClick="gotoFragment"
+        android:text="装载插件的fragment"
+       />
 </LinearLayout>

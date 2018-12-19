@@ -1,11 +1,11 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 27
     defaultConfig {
         applicationId "com.example.xumin.myplugindemo2"
         minSdkVersion 23
-        targetSdkVersion 28
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -16,14 +16,35 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    lintOptions {
+        abortOnError false
+    }
 }
+
+
+
 apply plugin: 'replugin-plugin-gradle'
+repluginPluginConfig {
+    pluginName = "inner"
+    hostApplicationId = "com.example.xumin.myhostdemo"
+    hostAppLauncherActivity = "com.example.xumin.myhostdemo.MainActivity"
+}
+
+configurations.all{
+    exclude group: 'com.android.support', module: 'support-v7'
+    exclude group: 'android.arch.lifecycle', module: 'support-v7'
+    exclude group: 'android.arch.lifecycle', module: 'support-v4'
+}
+
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    compile 'com.qihoo360.replugin:replugin-plugin-lib:2.2.4'
+    implementation 'com.qihoo360.replugin:replugin-plugin-lib:2.3.1'
+    provided files('libs/fragment.jar')//这个jar就是从Support-fragment中提取出来的并非特制包目的是为了骗过编译期
+    provided files('libs/lifecycle.jar')//这个jar就是从Support-fragment中提取出来的并非特制包目的是为了骗过编译期
+    provided files('libs/viewmodel.jar')//这个jar就是从Support-fragment中提取出来的并非特制包目的是为了骗过编译期
+    provided files('libs/computor.jar')//这个jar就是从Support-fragment中提取出来的并非特制包目的是为了骗过编译期
+   // compile project(path: ':computorlib')
 }

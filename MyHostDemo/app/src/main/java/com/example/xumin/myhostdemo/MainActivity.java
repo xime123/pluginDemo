@@ -2,15 +2,16 @@ package com.example.xumin.myhostdemo;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Environment;
+import android.os.IBinder;
+import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.computorlib.INormalComputor;
 import com.qihoo360.replugin.RePlugin;
 import com.qihoo360.replugin.model.PluginInfo;
 import com.qihoo360.replugin.utils.FileUtils;
@@ -18,6 +19,7 @@ import com.qihoo360.replugin.utils.FileUtils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 
 public class MainActivity extends AppCompatActivity {
     private ProgressBar pb;
@@ -96,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void gotoOuterPage(View view) {
+        //ARouter.getInstance().build("/plug/test/router").navigation();
         RePlugin.startActivity(MainActivity.this, RePlugin.createIntent("outer",
                 "com.example.xumin.myplugdemo.MainActivity"));
     }
@@ -131,5 +134,58 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void getComputor(View view) {
+        ClassLoader classLoader = RePlugin.fetchClassLoader("inner");
+
+        String clzzName = "com.example.xumin.myplugindemo2.NormalComputor";
+        String INSTANCE_METHOD = "getInstatnce";
+        try {
+            //Class aClass = Class.forName(clzzName);
+            Class aClass = classLoader.loadClass(clzzName);
+            Method getInstance = aClass.getMethod(INSTANCE_METHOD);
+            Method add = aClass.getMethod("add", int.class, int.class);
+            int result = (int) add.invoke(getInstance.invoke(aClass), 3, 5);
+            Log.e("ComputeService", "宿主通过反射得到结果 result=" + result + "pid=" + android.os.Process.myPid());
+//            Class [] interfaces=aClass.getInterfaces();
+//            if(interfaces!=null&&interfaces.length>0){
+//                Log.e("getComputor", "interface name=" + interfaces[0].getName());
+//            }
+            INormalComputor obj = (INormalComputor)getInstance.invoke(aClass);
+            int newResult=obj.add(3,8);
+            Log.e("ComputeService", "宿主通过创建插件对象得到计算结果 newResult=" + newResult + "toString=" + obj.toString());
+            // int result = obj.add(3, 4);
+            //Log.e("getComputor", "result=" + result);
+        } catch (Exception e) {
+            Log.e("getComputor", "find class error e=" + e.getMessage());
+        }
+
+    }
+
+    public void gotoInnerPage(View view) {
+        RePlugin.startActivity(MainActivity.this, RePlugin.createIntent("inner",
+                "com.example.xumin.myplugindemo2.MainActivity"));
+    }
+
+
+    public void testAIDL(View view) {
+        IBinder b = RePlugin.fetchBinder("inner", "ComputeService");
+        if (b == null) {
+            return;
+        }
+        com.example.xumin.myplugindemo2.IComputor computor = com.example.xumin.myplugindemo2.IComputor.Stub.asInterface(b);
+        try {
+            int result = computor.add(3, 5);
+            Log.e("ComputeService", "宿主得到结果 result=" + result + "pid=" + android.os.Process.myPid());
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void gotoFragment(View view) {
+        Intent intent = new Intent(this, TestFragmentActivity.class);
+        startActivity(intent);
     }
 }
